@@ -1,11 +1,32 @@
 import { useState, useEffect, useCallback } from 'react';
 
+export type RelationshipType = 'stranger' | 'client' | 'family' | 'friend' | 'colleague' | 'other';
+
+export interface SelectedQuestions {
+  givingId: string;
+  receivingId: string;
+  feelingId: string;
+  meaningId: string;
+}
+
 export interface Reflection {
   date: string; // ISO date string (YYYY-MM-DD)
-  helpedPerson: string;
-  helpedDescription: string;
+  // Store which questions were selected for this reflection
+  selectedQuestions: SelectedQuestions;
+  // Q1: Who did you support/help today?
+  supportedPerson: string;
+  supportedRelationship: RelationshipType;
+  // Q2: Who provided emotional support to you?
   supportedBy: string;
+  supportedByRelationship: RelationshipType;
+  // Q3: How did their support make you feel?
+  supportFeeling: string;
+  // Q4: What made this support meaningful?
+  meaningfulReason: string;
   createdAt: string; // Full ISO timestamp
+  // Legacy fields for backward compatibility
+  helpedPerson?: string;
+  helpedDescription?: string;
 }
 
 interface ReflectionState {

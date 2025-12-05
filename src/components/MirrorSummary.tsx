@@ -1,98 +1,53 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { RelationshipType } from "@/hooks/useReflections";
+import { generateIntegratedAffirmation } from "@/lib/questionPool";
+import { getRandomAffirmation } from "@/lib/dailyAffirmations";
 
 interface MirrorSummaryProps {
-  helpedPerson: string;
+  supportedPerson: string;
+  supportedRelationship: RelationshipType;
   supportedBy: string;
-  onSave: (helpedPerson: string, supportedBy: string) => void;
-  onEdit: () => void;
+  supportedByRelationship: RelationshipType;
+  supportFeeling: string;
+  meaningfulReason: string;
+  onSave: () => void;
+  onViewHistory: () => void;
 }
 
 export const MirrorSummary = ({
-  helpedPerson,
+  supportedPerson,
+  supportedRelationship,
   supportedBy,
+  supportedByRelationship,
+  supportFeeling,
+  meaningfulReason,
   onSave,
-  onEdit,
+  onViewHistory,
 }: MirrorSummaryProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedHelped, setEditedHelped] = useState(helpedPerson);
-  const [editedSupported, setEditedSupported] = useState(supportedBy);
   const [isSaved, setIsSaved] = useState(false);
 
   const handleSave = () => {
-    onSave(editedHelped, editedSupported);
+    onSave();
     setIsSaved(true);
   };
 
-  const handleEdit = () => {
-    if (isEditing) {
-      // Save edits
-      setIsEditing(false);
-    } else {
-      setIsEditing(true);
-    }
-  };
+  // Generate integrated affirmation that weaves all elements together
+  const affirmation = generateIntegratedAffirmation(
+    supportedPerson,
+    supportedRelationship,
+    supportedBy,
+    supportedByRelationship,
+    supportFeeling,
+    meaningfulReason
+  );
 
-  // Extract first meaningful phrase or person name
-  const extractPerson = (text: string) => {
-    // Take first sentence or first 50 chars
-    const firstSentence = text.split(/[.!?]/)[0].trim();
-    return firstSentence.length > 60 
-      ? firstSentence.substring(0, 60) + "..." 
-      : firstSentence;
-  };
-
-  if (isEditing) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-6 py-12">
-        <div className="max-w-xl w-full animate-gentle-fade">
-          <h2 className="font-serif text-heading text-foreground mb-8 text-center">
-            Edit Your Reflection
-          </h2>
-
-          <div className="space-y-6 mb-8">
-            <div>
-              <label className="block text-small text-muted-foreground mb-2">
-                Who you helped today
-              </label>
-              <Textarea
-                variant="warm"
-                value={editedHelped}
-                onChange={(e) => setEditedHelped(e.target.value)}
-                className="min-h-[100px]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-small text-muted-foreground mb-2">
-                Who made a difference to you
-              </label>
-              <Textarea
-                variant="warm"
-                value={editedSupported}
-                onChange={(e) => setEditedSupported(e.target.value)}
-                className="min-h-[100px]"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-center gap-4">
-            <Button variant="gentle" onClick={() => setIsEditing(false)}>
-              Cancel
-            </Button>
-            <Button variant="warm" onClick={handleEdit}>
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Get random daily affirmation (memoized so it doesn't change on re-render)
+  const dailyIntention = useMemo(() => getRandomAffirmation(), []);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
-      <div className="max-w-xl w-full animate-gentle-fade">
+      <div className="max-w-2xl w-full animate-gentle-fade">
         {/* Decorative element */}
         <div className="mb-10 flex justify-center">
           <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
@@ -100,36 +55,32 @@ export const MirrorSummary = ({
           </div>
         </div>
 
-        {/* Mirror summary */}
-        <div className="bg-card rounded-2xl p-8 shadow-card mb-8">
-          <p className="font-serif text-subheading text-foreground leading-relaxed text-center">
-            Today, you mattered to{" "}
-            <span className="text-primary italic">{extractPerson(editedHelped)}</span>
-            {" "}through your care and support.
+        <h2 className="font-serif text-heading text-foreground text-center mb-8">
+          Your Significance Mirror
+        </h2>
+
+        {/* Integrated affirmation */}
+        <div className="bg-card rounded-2xl p-10 shadow-card mb-6">
+          <div className="prose prose-lg max-w-none text-center">
+            <p className="font-serif text-body-lg text-foreground leading-relaxed whitespace-pre-line">
+              {affirmation}
+            </p>
+          </div>
+        </div>
+
+        {/* Daily Intention */}
+        <div className="bg-primary/5 border border-primary/20 rounded-xl p-8 mb-8">
+          <p className="text-small text-primary/70 uppercase tracking-wide text-center mb-3">
+            Your Daily Intention
           </p>
-
-          <div className="w-8 h-0.5 bg-border mx-auto my-6 rounded-full" />
-
-          <p className="font-serif text-subheading text-foreground leading-relaxed text-center">
-            You were supported by{" "}
-            <span className="text-primary italic">{extractPerson(editedSupported)}</span>.
-          </p>
-
-          <div className="w-8 h-0.5 bg-border mx-auto my-6 rounded-full" />
-
-          <p className="font-serif text-heading text-foreground text-center mt-8">
-            You make a difference.
-            <br />
-            <span className="text-primary">You are significant.</span>
+          <p className="font-serif text-heading text-primary text-center leading-relaxed italic">
+            {dailyIntention}
           </p>
         </div>
 
         {/* Actions */}
         {!isSaved ? (
-          <div className="flex justify-center gap-4">
-            <Button variant="gentle" onClick={handleEdit}>
-              Edit
-            </Button>
+          <div className="flex justify-center">
             <Button variant="warm" onClick={handleSave}>
               Save This Reflection
             </Button>
@@ -139,8 +90,8 @@ export const MirrorSummary = ({
             <p className="text-body text-muted-foreground mb-6">
               Your reflection has been saved.
             </p>
-            <div className="flex justify-center gap-4">
-              <Button variant="gentle" onClick={onEdit}>
+            <div className="flex justify-center">
+              <Button variant="warm" onClick={onViewHistory}>
                 View History
               </Button>
             </div>

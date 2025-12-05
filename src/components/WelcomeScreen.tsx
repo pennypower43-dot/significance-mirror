@@ -13,14 +13,26 @@ export const WelcomeScreen = ({ onBegin }: WelcomeScreenProps) => {
           <div className="w-16 h-0.5 bg-primary/40 mx-auto rounded-full" />
         </div>
 
-        {/* Title */}
-        <h1 className="font-serif text-display text-foreground mb-8 text-balance">
-          The Significance Mirror
+        {/* Welcome message */}
+        <h1 className="font-serif text-display text-foreground mb-6 text-balance">
+          Welcome to Your Day of Significance
         </h1>
 
+        <p className="font-serif text-heading text-primary mb-10 text-balance">
+          Driven by Contribution
+        </p>
+
         {/* Body copy */}
-        <p className="text-body-lg text-muted-foreground mb-12 leading-relaxed max-w-md mx-auto">
-          Each day, take a quiet moment to notice why you matter — and who matters to you.
+        <p className="text-body-lg text-muted-foreground mb-6 leading-relaxed max-w-lg mx-auto">
+          Today, you will deepen your relationships by making others feel significant and allowing others to make you feel significant.
+        </p>
+
+        <p className="text-body text-muted-foreground/80 mb-8 leading-relaxed max-w-md mx-auto italic">
+          "To be significant is to be seen, heard, and appreciated. It is both a gift we receive and a gift we give."
+        </p>
+
+        <p className="text-body-sm text-muted-foreground/70 mb-12 leading-relaxed max-w-md mx-auto">
+          When we make others feel significant, we simultaneously strengthen our own sense of purpose and connection.
         </p>
 
         {/* Decorative element */}
@@ -29,8 +41,8 @@ export const WelcomeScreen = ({ onBegin }: WelcomeScreenProps) => {
         </div>
 
         {/* CTA Button */}
-        <Button 
-          variant="warm" 
+        <Button
+          variant="warm"
           size="xl"
           onClick={onBegin}
           className="font-sans"
@@ -40,7 +52,7 @@ export const WelcomeScreen = ({ onBegin }: WelcomeScreenProps) => {
 
         {/* Footer note */}
         <p className="mt-16 text-small text-muted-foreground/70">
-          A quiet space for daily reflection
+          Your daily mirror for building significance through contribution
         </p>
       </div>
     </div>
