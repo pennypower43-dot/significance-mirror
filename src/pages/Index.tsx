@@ -48,21 +48,11 @@ const Index = () => {
     return selectDailyQuestions();
   }, [getTodaysReflection]);
 
-  // Determine initial screen
+  // Determine initial screen - always start with welcome
   useEffect(() => {
-    if (hasCompletedOnboarding) {
-      const todaysReflection = getTodaysReflection();
-      if (todaysReflection) {
-        // If already completed today, show history
-        setCurrentScreen("history");
-      } else {
-        // Show welcome screen daily before starting new reflection
-        setCurrentScreen("welcome");
-      }
-    } else {
-      setCurrentScreen("welcome");
-    }
-  }, [hasCompletedOnboarding, getTodaysReflection, dailyQuestions]);
+    // Always show welcome screen on first load
+    setCurrentScreen("welcome");
+  }, []);
 
   const handleBegin = () => {
     // Complete onboarding if first time
@@ -172,7 +162,11 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background">
       {currentScreen === "welcome" && (
-        <WelcomeScreen onBegin={handleBegin} />
+        <WelcomeScreen
+          onBegin={handleBegin}
+          onViewHistory={handleViewHistory}
+          hasReflections={getAllReflections().length > 0}
+        />
       )}
 
       {currentScreen === "question1" && (

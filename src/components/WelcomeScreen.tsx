@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 
 interface WelcomeScreenProps {
   onBegin: () => void;
+  onViewHistory?: () => void;
+  hasReflections?: boolean;
 }
 
-export const WelcomeScreen = ({ onBegin }: WelcomeScreenProps) => {
+export const WelcomeScreen = ({ onBegin, onViewHistory, hasReflections }: WelcomeScreenProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="max-w-lg w-full text-center animate-gentle-fade">
@@ -49,6 +51,19 @@ export const WelcomeScreen = ({ onBegin }: WelcomeScreenProps) => {
         >
           Begin Today's Reflection
         </Button>
+
+        {/* View History Link */}
+        {hasReflections && onViewHistory && (
+          <div className="mt-6">
+            <Button
+              variant="ghost"
+              onClick={onViewHistory}
+              className="text-muted-foreground hover:text-primary"
+            >
+              View Past Reflections
+            </Button>
+          </div>
+        )}
 
         {/* Footer note */}
         <p className="mt-16 text-small text-muted-foreground/70">
